@@ -1,0 +1,71 @@
+// importing variables and resets
+@import "./resets";
+@import "./variebles";
+
+// Defining functions
+@function weight($weight-name) {
+  @return map-get($font-weights, $weight-name);
+}
+
+// passing arguments in the mixin
+@mixin flexColumn($direction) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+// using conditional statements in @mixin
+@mixin theme($light-theme: true) {
+  @if ($light-theme) {
+    background: lighten($primary-color, 100%);
+    color: darken($text-color, 100%);
+  }
+}
+
+//adding media queries in @mixin
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content; // @content is used to add the content defined while using @mixin mobile
+  }
+}
+
+body {
+  background-color: $primary-color;
+  color: $text-color;
+}
+.main {
+  margin: 0 auto;
+
+  // mixing types i.e % and px are different types in css, will work only when they are defined with calc()
+  width: calc(80%-40%);
+
+  // using @mixin and passing values to arguments
+  @include flexColumn(row);
+
+  // using & instead of .main in .main__paragraph
+  #{&}__paragraph1 {
+    font-weight: weight(bold);
+
+    &:hover {
+      color: pink;
+    }
+  }
+
+  #{&}__paragraph2 {
+    @extend .main__paragraph1; // @extend is used to add all the css present in the .main__paragraph1 here
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+
+  // usage of mobile @mixin
+  @include mobile {
+    flex-direction: column;
+  }
+}
+.light {
+  // usage theme @mixin
+  @include theme($light-theme: false);
+}
